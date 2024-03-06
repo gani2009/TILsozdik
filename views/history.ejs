@@ -1,0 +1,23 @@
+<%- include('header', {title: "Тарихы"}) %>
+<div class="col " id="main-content">
+    <h6><a href="/dictionary/<%= word.word %>" class="link-dark back-link"><i class="fa-solid fa-chevron-left"></i>Артқа</a></h6>
+    <h1><%= word.word %> тарихы: </h1>
+    <h4>Кәзіргі нұсқасы</h4>
+    <div class="nav-link text-dark ms-3">
+        <h4><%= word.word %></h4>
+        <p><%= word.meaning %></p>
+        <h6 class="blockquote-footer text-end"><a href="/profile/<%= word.author %>" class="link-secondary"><%= word.author %></a> <%= word.date %></h6>
+    </div>
+    <% if (word.history) { %>
+        <hr>
+        <h3>Алдынғы нұсқалары</h3>
+        <% for (i in word.history.reverse()){ %>
+            <div class="nav-link text-dark border border-2 border-dark mb-2 ms-3">
+                <h4><%= word.history[i].word %></h4>
+                <p><%= word.history[i].meaning %></p>
+                <h6 class="blockquote-footer text-end"><a href="/profile/<%= word.author %>" class="link-secondary"><%= word.history[i].author %></a> <%= word.history[i].date %> </h6>
+            </div>
+        <% } %>
+    <% } %>
+</div>
+<%- include('footer') %>

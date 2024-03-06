@@ -1,0 +1,27 @@
+<%- include('header', {title: word.word}) %>
+<div class="col" id="main-content">
+        <h6><a href="/dictionary" class="link-dark back-link"><i class="fa-solid fa-chevron-left"></i>Артқа</a></h6>
+        <span class="fs-3 fw-bold"><%= word.word %></span>
+        <% if(word.verified == true){ %>
+                <span class="fs-7">✅</span>
+            <% } else { %>
+                <span class="badge rounded-pill bg-danger fs-7">тексерілмеген</span>
+            <% } %>
+            <a class="link-nounderline" href="/dictionary/<%= word.word %>/history">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            тарихы</a>
+            <% if(user.userId && user.emailverified && user.userlevel > 0){ %>
+                <a class="link-nounderline" href="/dictionary/<%= word.word %>/edit">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                түзету</a>
+                <% if(word.verified == false && user.userlevel >= 3){ %>
+                    <a class="link-nounderline" href="/dictionary/<%= word.word %>/verify">
+                        <i class="fa-solid fa-check"></i>
+                    қабылдау</a>
+                <% } %>
+            <% } %>
+        <hr>
+        <h6><%- word.meaning %></h6>
+        <h6 class="blockquote-footer text-end mt-5"><a href="/profile/<%= word.author %>" class="link-secondary"><%= word.author %></a></h6>
+</div>
+<%- include('footer') %>

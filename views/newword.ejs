@@ -1,0 +1,29 @@
+<%- include('header', {title: "Жаңа сөз"}) %>
+<div class="col" id="main-content">
+    <div id="newword-form">
+        <h1>Жаңа сөз</h1>
+        <% if (error === 'wordexists') { %>
+            <p class="alert alert-danger">Бұл сөздің мағынасы беріліп қойған. </p>
+        <% } %>
+        <% if (error === 'meaningtooshort') { %>
+            <p class="alert alert-danger">Сөздің мағынасы ең азы 80 симбол болу керек. </p>
+        <% } %>
+        <form action="/dictionary/new" method="post">
+            <label for="word">Сөз:</label><br>
+            <input type="text" class="form-control" id="word" name="word" value="<%= word %>" autocomplete="off" required>
+            <br>
+            <label for="meaning">Мағынасы: <span id="characterNum">0</span>/80 мин</label><br>
+            <textarea type="text" class="form-control" id="meaning" onkeydown="characterCount()" name="meaning" autocomplete="off" rows="3" required></textarea>
+            <br>
+            <button type="submit" class="btn btn-primary">Қабылдау</button>
+        </form>
+    </div>
+</div>
+<script>
+    function characterCount() {
+        let span = document.getElementById("characterNum");
+        let textarea = document.getElementById("meaning");
+        span.innerText = textarea.value.length;
+    };
+</script>
+<%- include('footer') %>

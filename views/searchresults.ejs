@@ -1,0 +1,17 @@
+<%- include('header', {title: "Іздеу нәтижелері"}) %>
+<div class="col" id="main-content">
+    <h3>Іздеу:</h3>
+    <form class="me-3 mb-5" id="searchBar" role="search" action="/search/dictionary/" method="get">
+        <div class="input-group">
+          <input type="search" class="form-control" id="searchBarInput" placeholder="Іздеу..." onkeypress="search()" value="<%= wordsearched %>" aria-label="Search" />
+          <button type="button" class="btn btn-outline-dark" onclick="searchButton()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+      </form>
+    <% for (i in words){ %>
+        <a href="/dictionary/<%= words[i].word %>" class="words-word">
+            <h3><%= words[i].word %></h3>
+            <p><%= words[i].meaning %></p>
+        </a>
+    <% } %>
+</div>
+<%- include('footer') %>

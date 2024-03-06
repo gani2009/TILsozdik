@@ -1,0 +1,23 @@
+<%- include('header', {title: "Кіру"}) %>
+<div class="col" id="main-content">
+    <div id="login-form">
+        <h1>Кіру</h1>
+        <% if (error === 'noauth') { %>
+            <p class="alert alert-danger">Қолданушы аты немесе кілтсөз дұрыс емес. </p>
+        <% } %>
+        <% if (error === 'authneeded') { %>
+            <p class="alert alert-danger">Оны жасай алу үшін аккаунт керек. </p>
+        <% } %>
+        <form action="/login" method="post">
+            <label for="loginusername">Қолданушы аты:</label><br>
+            <input type="text" class="form-control" id="loginusername" name="loginusername" pattern="[a-zA-Z0-9!@#$%^*_|]" required>
+            <br>
+            <label for="loginpassword">Кілтсөз:</label><br>
+            <input type="password" class="form-control" id="loginpassword" name="loginpassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Кемінде бір сан және, бір бас және кіші әріп және, кемінде 8 немесе одан да көп таңба болуы керек" required>
+            <br>
+            <button type="submit" class="btn btn-primary">Кіру</button><a href="/reset/password" class="ms-2">Кілтсөзін қалпына келтіру</a>
+        </form>
+        <p>Егер аккаунт жоқ болса <a href="/register">Тіркеліңіз</a></p>
+    </div>
+</div>
+<%- include('footer') %>

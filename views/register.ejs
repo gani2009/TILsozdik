@@ -1,0 +1,39 @@
+<%- include('header', {title: "Тіркелу"}) %>
+<link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+<script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<div class="col" id="main-content">
+    <div id="login-form">
+        <h1>Тіркелу</h1>
+        <% if (error === 'userexists') { %>
+            <p class="alert alert-danger">Бұл қолданушы аты бос емес. Басқасын таңдаңыз.</p>
+        <% } %>
+        <form action="/register" method="post">
+            <label for="firstname">Атыңыз:</label>
+            <input type="text" class="form-control" id="firstname" name="firstname" required>
+            <label for="lastname">Фамиляңыз:</label>
+            <input type="text" class="form-control" id="lastname" name="lastname" required>
+            <br>
+            <label for="regisusername">Қолданушы аты:</label>
+            <input type="text" class="form-control" id="regisusername" name="regisusername" pattern="[a-zA-Z0-9!@#$%^*_|]" required>
+            <label for="regispassword">Кілтсөз:</label>
+            <input type="password" class="form-control" id="regispassword" name="regispassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Кемінде бір сан және, бір бас және кіші әріп және, кемінде 8 немесе одан да көп таңба болуы керек" required>
+            <br>
+            <label for="phone">Телефон:</label>
+            <input type="tel" class="form-control" id="phone" name="phone" minlength="10" required>
+            <label for="email">Электронды почта:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+            <br>
+            <button type="submit" onclick="document.getElementById('phone').value = `+${phoneInput.getSelectedCountryData().dialCode}${document.getElementById('phone').value}`" class="btn btn-success">Қабылдау</button>
+        </form>
+        <p>Аккаунттыңыз бар ма? <a href="/login">Кіру</a></p>
+    </div>
+</div>
+<script>
+            var input = document.querySelector("#phone");
+            let phoneInput = window.intlTelInput(input, {
+                separateDialCode: true,
+                preferredCountries: ["kz", "us"],
+                initialCountry:"kz",
+            });
+        </script>
+<%- include('footer') %>

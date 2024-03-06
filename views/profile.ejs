@@ -1,0 +1,51 @@
+<%- include('header', {title: (userLookedUp.length == 0 ? 'Профиль табылмады. ' : 'Профиль - ' + userLookedUp[0].username)}) %>
+<div class="col" id="main-content">
+    <% if (userLookedUp.length != 0){ %>
+        <% if (error == 'undefined' && userLookedUp[0].username == user.username && userLookedUp[0].emailverified == false) { %>
+            <p class="alert alert-danger">Электронды почтаңызды растауыңыз керек. Электронды почтаңызды тексеріңіз, немесе <a href="/resendemailver">линкты қайтадан жіберу</a>. </p>
+        <% } %>
+        <% if (error === 'emailnotverified') { %>
+            <p class="alert alert-danger">Оны жасай алу үшін электронды почтаңызды растауыңыз керек. Электронды почтаңызды тексеріңіз. </p>
+        <% } else if (error === 'emailresent') { %>
+            <p class="alert alert-primary">Электронды почтаңызды тексеріңіз. Электронды почтаңызды растауыңызға линк жіберілді. </p>
+        <% } else if (error === 'emailwasverified') { %>
+            <p class="alert alert-success">Электронды почтаңыз расталды. </p>
+        <% } %>
+        <h2><%= userLookedUp[0].username %>
+            <span class="<%= 'badge bg-primary fs-6-5' %>" data-toggle="tooltip" title="<%= userLookedUp[0].userlevel %>-шы деңгей" >
+                Д<%= userLookedUp[0].userlevel %>
+            </span>
+            <% if (userLookedUp[0].username == user.username){ %>
+                <a class="link-nounderline fs-6 ms-1 " href="/profile/edit">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    Өзгерту</a>
+            <% } %>
+        </h2>
+        <% if (userLookedUp[0].private == false || userLookedUp[0].username == user.username){ %>
+            <h5>Аты: <%= userLookedUp[0].firstname %> <%= userLookedUp[0].lastname %> </h5>
+            <% if (userLookedUp[0].username == user.username){ %>
+                <h6>Телефон: <%= user.phone %></h6>
+                <h6>Электронды почта: <%= user.email %></h6>
+            <% } %>
+            <h6>Мақалалары: </h6>
+        <% } else { %>
+            <h5>Бұл жеке акаунт. </h5>
+        <% } %>
+    <% } else { %>
+        <h5>Бұл акаунтты таба алмадық. </h5>
+    <% } %>
+</div>
+<script>
+    let profileLink = document.getElementById("profileLink");
+    let logoutLink = document.getElementById("logoutLink");
+    profileLink.classList.add("pc-header");
+    logoutLink.classList.remove("pc-header");
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+    });
+</script>
+<%- include('footer') %>

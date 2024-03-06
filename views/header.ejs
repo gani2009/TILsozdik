@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.css" rel="stylesheet" crossorigin="anonymous" />
+    <link href="/main.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/1f1608c1ca.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="py-3 mb-4 border-bottom fixed-top flex-wrap align-items-center justify-content-center justify-content-md-between header">
+    <div class="container d-flex">
+      <a class="nav-link col-9 mb-0 ms-0 fs-5 link-dark mobile-header" data-bs-toggle="offcanvas" href="#mobile-sidebar" role="button" aria-controls="mobile-sidebar"><i class="fa-solid fa-bars"></i></a>
+      <a href="/" class="me-5 col-2 link-body-emphasis text-decoration-none link-dark pc-header">
+        <span class="fs-5">ТІЛsozdik</span>
+      </a>
+      <form class="col-3 mx-lg-auto pc-header" id="searchBar" role="search" action="/search/dictionary/" method="get">
+        <div class="input-group">
+          <input type="search" class="form-control" id="searchBarInput" placeholder="Іздеу..." onkeypress="search()" aria-label="Search" />
+          <button type="button" class="btn btn-outline-dark" onclick="searchButton()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+      </form>
+      <% if (user.userId) {%>
+        <ul class="nav">
+            <li class="nav-item" id="profileLink"><a href="/profile/<%= user.username %>" class="nav-link link-body-emphasis px-2"><%= user.firstname %></a></li>
+            <li class="nav-item pc-header" id="logoutLink"><a href="/logout" class="nav-link link-body-emphasis px-2"><i class="fa-solid fa-arrow-right-from-bracket"></i> Шығу</a></li>
+        </ul>
+      <% } else { %>
+        <ul class="nav">
+            <li class="nav-item"><a href="/login" class="nav-link link-body-emphasis px-2"><i class="fa-solid fa-arrow-right-to-bracket"></i> Кіру</a></li>
+            <li class="nav-item pc-header"><a href="#" class="nav-link link-body-emphasis px-2">/</a></li>
+            <li class="nav-item pc-header"><a href="/register" class="nav-link link-body-emphasis px-2"><i class="fa-regular fa-address-card"></i> Тіркелу</a></li>
+        </ul>
+      <% }; %>
+      
+    </div>
+  </header>
+<div class="container">
+    <div class="row">
+        <div class="col-2 position-fixed pc-header me-4" id="sidebar">
+            <p><a class="nav-link fs-6" href="/"><i class="fa-solid fa-house"></i> <span>Басты бет</span></a></p>
+            <hr style="width: 60%;">
+            <p><a class="nav-link fs-6" href="/search/dictionary"><i class="fa-solid fa-magnifying-glass"></i> <span>Іздеу</span></a></p>
+            <hr style="width: 60%;">
+            <p><a class="nav-link fs-6" href="/dictionary"><i class="fa-solid fa-book"></i> <span>Сөздер</span></a></p>
+            <hr style="width: 60%;">
+            <% if (user.userId && user.emailverified && user.userlevel >= 2) { %>
+                <p><a class="nav-link fs-6" href="/dictionary/new"><i class="fa-solid fa-plus"></i> <span>Cөз еңгізу</span></a></p>
+                <hr style="width: 60%;">
+            <% } %>
+            <p><a class="nav-link fs-6" href="/developer-log"><i class="fa-solid fa-newspaper"></i> <span>Кодер Журналы</span></a></p>
+            <hr style="width: 60%;">
+            <p><a class="nav-link fs-6" href="/contact"><i class="fa-solid fa-address-book"></i> <span>Контакты</span></a></p>
+        </div>
+        <div class="offcanvas offcanvas-start mobile-header" tabindex="-1" id="mobile-sidebar" aria-labelledby="mobile-sidebar-label">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="mobile-sidebar-label"><a href="/" class="link-body-emphasis text-decoration-none link-dark">ТІЛsozdik</a></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <div>
+              <p><a class="nav-link fs-6" href="/"><i class="fa-solid fa-house"></i> <span>Басты бет</span></a></p>
+              <p><a class="nav-link fs-6" href="/search/dictionary"><i class="fa-solid fa-magnifying-glass"></i> <span>Іздеу</span></a></p>
+              <p><a class="nav-link fs-6" href="/dictionary"><i class="fa-solid fa-book"></i> <span>Сөздер</span></a></p>
+              <% if (user.userId && user.emailverified && user.userlevel >= 2) { %>
+                  <p><a class="nav-link fs-6" href="/dictionary/new"><i class="fa-solid fa-plus"></i> <span>Cөз еңгізу</span></a></p>
+              <% } %>
+              <p><a class="nav-link fs-6" href="/developer-log"><i class="fa-solid fa-newspaper"></i> <span>Кодер Журналы</span></a></p>
+              <p><a class="nav-link fs-6" href="/contact"><i class="fa-solid fa-address-book"></i> <span>Контакты</span></a></p>
+            </div>
+          </div>
+        </div>

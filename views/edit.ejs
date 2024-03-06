@@ -1,0 +1,35 @@
+<%- include('header', {title: "Сөз Өзгерту"}) %>
+<div class="col" id="main-content">
+    <div id="newword-form">
+        <% if (error == "needtobemod"){ %>
+            <p class="alert alert-danger">Сіздің акаунт профильыңыздың деңгейі жет бейді. </p>
+        <% } %>
+        <h6><a href="/dictionary/<%= word.word %>" class="link-dark back-link"><i class="fa-solid fa-chevron-left"></i>Артқа</a></h6>
+        <h1><%= word.word %></h1>
+        <% if (error === 'needtobemod') { %>
+            <p class="alert alert-danger">Оны жасай алу үшін 4-шы деңгейде немесе жоғарырақ болу керек. </p>
+        <% } %>
+        <% if (error === 'meaningtooshort') { %>
+            <p class="alert alert-danger">Сөздің мағынасы ең азы 80 симбол болу керек. </p>
+        <% } %>
+        <form action="/dictionary/<%= word.word %>/edit" method="post">
+            <% if (user.userlevel >= 4){ %>
+                <label for="word">Сөз:</label><br>
+                <input type="text" class="form-control" id="word" name="word" value="<%= word.word %>" autocomplete="off" required>
+                <br>
+            <% } %>
+            <label for="meaning">Мағынасы: <span id="characterNum">0</span>/80 мин</label><br>
+            <textarea type="text" class="form-control" id="meaning" onkeydown="characterCount()" name="meaning" autocomplete="off" rows="3" required><%= word.meaning %></textarea>
+            <br>
+            <button type="submit" class="btn btn-primary">Түзерту</button>
+        </form>
+    </div>
+</div>
+<script>
+    function characterCount() {
+        let span = document.getElementById("characterNum");
+        let textarea = document.getElementById("meaning");
+        span.innerText = textarea.value.length;
+    };
+</script>
+<%- include('footer') %>

@@ -1,0 +1,13 @@
+<%- include('header', {title: "Сөздер"}) %>
+<div class="col" id="main-content">
+    <% if (error == "needtobemod"){ %>
+        <p class="alert alert-danger">Сіздің акаунт профильыңыздың деңгейі жет бейді. </p>
+    <% } %>
+    <% for (i in words){ %>
+        <a href="/dictionary/<%= words[i].word %>" class="words-word">
+            <h3><%= words[i].word %></h3>
+            <p><%= words[i].meaning %></p>
+        </a>
+    <% } %>
+</div>
+<%- include('footer') %>
