@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const tokenGenerator = require('token-generator')({
     salt: process.env.SALT,
-    timestampMap: 'andopwftrh', // 10 chars array for obfuscation proposes
+    timestampMap: process.env.TOKENPASS, // 10 chars array for obfuscation proposes
 });
 
 const app = express();
@@ -17,7 +17,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'samgauor_users',
-    password: 'rabi2018',
+    password: process.env.PGPASS,
     port: 5432,
 });
 
@@ -26,7 +26,7 @@ var transporter = nodemailer.createTransport({
 //   secure: true,
   auth: {
     user: 'til.sozdik@samgau.org.kz',
-    pass: 'R@biga2018'
+    pass: process.env.MAILPASS
   }
 });
 
