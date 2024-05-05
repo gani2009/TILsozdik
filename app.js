@@ -5,9 +5,9 @@ const session = require('express-session');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
-const tokenGenerator = require('token-generator' )({
+const tokenGenerator = require('token-generator')({
     salt: process.env.SALT,
-    timestampMap: 'abcdefghij', // 10 chars array for obfuscation proposes
+    timestampMap: 'andopwftrh', // 10 chars array for obfuscation proposes
 });
 
 const app = express();
@@ -149,7 +149,7 @@ app.post('/register', async (req, res) => {
     await pool.query('INSERT INTO users (username, password, firstname, lastname, phone, email) VALUES ($1, $2, $3, $4, $5, $6)', [regisusername, bcrypt.hashSync(regispassword, salt), firstname, lastname, phone, email]);
     let token = tokenGenerator.generate();
     verifyEmailTokens.push({token: token, email: email});
-    sendEmail(email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
+    sendEmail(email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/email/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
     res.redirect(loginRegister);
 });
 
@@ -163,17 +163,17 @@ app.get('/resendemailver', async (req, res) => {
     if (!tokenElement) {
         let token = tokenGenerator.generate();
         verifyEmailTokens.push({ token: token, email: req.session.email });
-        sendEmail(req.session.email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
+        sendEmail(req.session.email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/email/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
     } else {
         let token = tokenElement.token;
-        sendEmail(req.session.email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
+        sendEmail(req.session.email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/email/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
     }
 
     res.cookie("error", "emailresent");
     res.redirect(`/profile/${req.session.username}`);
 });
 
-app.get('/verify/:token', async (req, res) => {
+app.get('/verify/email/:token', async (req, res) => {
     if (!req.session.userId) {
         res.cookie('error', 'authneeded');
     	return res.redirect("/login");
@@ -252,7 +252,7 @@ app.post('/profile/edit', async (req, res) => {
         emailverified = false;
         let token = tokenGenerator.generate();
         verifyEmailTokens.push({token: token, email: email});
-        sendEmail(email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
+        sendEmail(email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/email/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
     };
     if (private != 'on') {
         private = false;
