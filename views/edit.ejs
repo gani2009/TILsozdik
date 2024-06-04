@@ -22,6 +22,11 @@
             <textarea type="text" class="form-control" id="meaning" onkeydown="characterCount()" name="meaning" autocomplete="off" rows="3" required><%= word.meaning %></textarea>
             <br>
             <button type="submit" class="btn btn-primary">Түзерту</button>
+            <% if (user.userlevel >= 5){ %>
+                <input type="hidden" id="deleteword" name="delete" value="false" />
+                <br>
+                <button type="submit" onclick="document.getElementById('deleteword').value = 'true';" class="btn btn-danger mt-2">Жою</button>
+            <% } %>
         </form>
     </div>
 </div>
@@ -31,5 +36,6 @@
         let textarea = document.getElementById("meaning");
         span.innerText = textarea.value.length;
     };
+    characterCount();
 </script>
 <%- include('footer') %>

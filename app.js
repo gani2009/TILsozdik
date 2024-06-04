@@ -460,10 +460,15 @@ app.post('/dictionary/:word/edit', async (req, res) => {
                     return res.redirect(`/dictionary/${word}/edit`);
                 };
             };
-            let history = {word: result.rows[0].word, meaning: result.rows[0].meaning, author: result.rows[0].author, date: result.rows[0].date};
-            let date = new Date().toISOString().split('T')[0];
-            await pool.query('UPDATE dictionary SET word=$1, meaning=$2, history=array_append(history, $3), verified=false, date=$5 WHERE word=$4', [req.body.word || word, req.body.meaning, history, req.params.word, date]);
-            res.redirect(`/dictionary/${req.body.word || word}`);
+            if (req.session.userlevel >= 5 && req.body.delete == "true" ) {
+                await pool.query('DELETE FROM dictionary WHERE word=$1', [req.params.word]);
+                res.redirect(`/dictionary`);
+            } else {
+                let history = {word: result.rows[0].word, meaning: result.rows[0].meaning, author: result.rows[0].author, date: result.rows[0].date};
+                let date = new Date().toISOString().split('T')[0];
+                await pool.query('UPDATE dictionary SET word=$1, meaning=$2, history=array_append(history, $3), verified=false, date=$5 WHERE word=$4', [req.body.word || word, req.body.meaning, history, req.params.word, date]);
+                res.redirect(`/dictionary/${req.body.word || word}`);
+            };
         } else {
             res.redirect(`/dictionary/${req.params.word}`);
         };
