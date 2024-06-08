@@ -1,7 +1,7 @@
 <%- include('header', {title: (userLookedUp.length == 0 ? 'Профиль табылмады. ' : 'Профиль - ' + userLookedUp[0].username)}) %>
 <div class="col" id="main-content">
     <% if (userLookedUp.length != 0){ %>
-        <% if (error == 'undefined' && userLookedUp[0].username == user.username && userLookedUp[0].emailverified == false) { %>
+        <% if (error == 'undefined' && userLookedUp[0].username == user.username && user.emailverified == false) { %>
             <p class="alert alert-danger">Электронды почтаңызды растауыңыз керек. Электронды почтаңызды тексеріңіз, немесе <a href="/resendemailver">линкты қайтадан жіберу</a>. </p>
         <% } %>
         <% if (error === 'emailnotverified') { %>

@@ -13,6 +13,7 @@ const tokenGenerator = require('token-generator')({
 const app = express();
 const port = process.env.PORT || 8080;
 
+// Development
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -20,9 +21,17 @@ const pool = new Pool({
     password: process.env.PGPASS,
     port: 5432,
 });
+// Producion:
+// const pool = new Pool({
+//     user: 'postgres',
+//     host: 'srv-db-pgsql01.ps.kz',
+//     database: 'samgauor_users',
+//     password: process.env.PGPASS,
+//     port: 5432,
+// });
 
 var transporter = nodemailer.createTransport({
-  host: 'mail.samgau.org.kz',
+  host: 'srv-plesk50.ps.kz',
 //   secure: true,
   auth: {
     user: 'til.sozdik@samgau.org.kz',
