@@ -1,5 +1,6 @@
 // Search
 function search() {
+    
     event.preventDefault();
     var searchBar = document.getElementById("searchBar");
     var searchBarInput = document.getElementById("searchBarInput");

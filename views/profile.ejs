@@ -13,12 +13,15 @@
         <% } %>
         <h2><%= userLookedUp[0].username %>
             <span class="<%= 'badge bg-primary fs-6-5' %>" data-toggle="tooltip" title="<%= userLookedUp[0].userlevel %>-шы деңгей" >
-                Д<%= userLookedUp[0].userlevel %>
+                Д<%= Math.floor(userLookedUp[0].userlevel) %>
             </span>
             <% if (userLookedUp[0].username == user.username){ %>
                 <a class="link-nounderline fs-6 ms-1 " href="/profile/edit">
                     <i class="fa-solid fa-pen-to-square"></i>
-                    Өзгерту</a>
+                    Өзгерту</a><br>
+                <div class="progress" role="progressbar" style="width: 500px;" aria-label="next level progress" aria-valuenow="<%= (user.userlevel - Math.floor(user.userlevel)) * 100 %>" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar" style="width: <%= (user.userlevel - Math.floor(user.userlevel)) * 100 %>%"></div>
+                </div>
             <% } %>
         </h2>
         <% if (userLookedUp[0].private == false || userLookedUp[0].username == user.username){ %>

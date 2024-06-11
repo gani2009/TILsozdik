@@ -5,6 +5,7 @@ const session = require('express-session');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const schedule = require('node-schedule');
 const tokenGenerator = require('token-generator')({
     salt: process.env.SALT,
     timestampMap: process.env.TOKENPASS, // 10 chars array for obfuscation proposes
@@ -112,10 +113,11 @@ app.post('/login', async (req, res) => {
         req.session.lastname = user.lastname;
         req.session.phone = user.phone;
         req.session.email = user.email;
-        req.session.userlevel = parseInt(user.userlevel);
+        req.session.userlevel = parseFloat(user.userlevel);
         req.session.emailverified = user.emailverified;
         req.session.private = user.private;
-        res.redirect(loginRegister);
+        req.session.registrationDate = user.registrationDate;
+        res.redirect(req.session.emailverified == true ? loginRegister : `/profile/${req.session.username}`);
     } else {
         res.cookie('error', 'noauth');
         res.redirect('/login');
@@ -155,10 +157,16 @@ app.post('/register', async (req, res) => {
     };
     
     // Insert the new user into the database
-    await pool.query('INSERT INTO users (username, password, firstname, lastname, phone, email) VALUES ($1, $2, $3, $4, $5, $6)', [regisusername, bcrypt.hashSync(regispassword, salt), firstname, lastname, phone, email]);
+    const registrationDate = new Date();
+    await pool.query('INSERT INTO users (username, password, firstname, lastname, phone, email, registrationdate) VALUES ($1, $2, $3, $4, $5, $6, $7)', [regisusername, bcrypt.hashSync(regispassword, salt), firstname, lastname, phone, email, registrationDate]);
+    registrationDate.setDate(registrationDate.getDate() + 3);
     let token = tokenGenerator.generate();
     verifyEmailTokens.push({token: token, email: email});
     sendEmail(email, 'Электронды почтаңызды растауға линк. ', `Электронды почтаңызды растау үшін осы <a href="https://www.samgau.org.kz/verify/email/${token}">линкты</a> басыңыз. <br> - ТІЛsozdik`);
+    schedule.scheduleJob(registrationDate, async () => {
+        await pool.query('UPDATE users SET userlevel = 1 WHERE username = $1', [regisusername]);
+        console.log("User passed date requirement! ");
+    });
     res.redirect(loginRegister);
 });
 
@@ -363,6 +371,8 @@ app.post('/dictionary/new', async (req, res) => {
         };
         let date = new Date().toISOString().split('T')[0];
         await pool.query('INSERT INTO dictionary (word, meaning, author, date) VALUES ($1, $2, $3, $4)', [newWord, req.body.meaning, req.session.username, date]);
+        await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.01 / Math.floor(req.session.userlevel)), req.session.username]);
+        req.session.userlevel = req.session.userlevel + (0.01 /Math.floor(req.session.userlevel));
         res.redirect(`/dictionary/${newWord}`);
     };
 });
@@ -397,6 +407,8 @@ app.get('/dictionary/:word/verify', async (req, res) => {
         let result = await pool.query('SELECT * FROM dictionary WHERE word = $1', [searchWord]);
         if (result.rows.length > 0){
             await pool.query('UPDATE dictionary SET verified=true WHERE word = $1', [searchWord]);
+            await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.01 / Math.floor(req.session.userlevel)), req.session.username]);
+            req.session.userlevel = req.session.userlevel + (0.01 /Math.floor(req.session.userlevel));
             res.redirect(`/dictionary/${searchWord}`);
         } else {
             res.redirect(`/dictionary/${searchWord}`);
@@ -471,11 +483,15 @@ app.post('/dictionary/:word/edit', async (req, res) => {
             };
             if (req.session.userlevel >= 5 && req.body.delete == "true" ) {
                 await pool.query('DELETE FROM dictionary WHERE word=$1', [req.params.word]);
+                await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.01 / Math.floor(req.session.userlevel)), req.session.username]);
+                req.session.userlevel = req.session.userlevel + (0.01 /Math.floor(req.session.userlevel));
                 res.redirect(`/dictionary`);
             } else {
                 let history = {word: result.rows[0].word, meaning: result.rows[0].meaning, author: result.rows[0].author, date: result.rows[0].date};
                 let date = new Date().toISOString().split('T')[0];
                 await pool.query('UPDATE dictionary SET word=$1, meaning=$2, history=array_append(history, $3), verified=false, date=$5 WHERE word=$4', [req.body.word || word, req.body.meaning, history, req.params.word, date]);
+                await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.01 / Math.floor(req.session.userlevel)), req.session.username]);
+                req.session.userlevel = req.session.userlevel + (0.01 /Math.floor(req.session.userlevel));
                 res.redirect(`/dictionary/${req.body.word || word}`);
             };
         } else {
