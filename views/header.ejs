@@ -16,10 +16,10 @@
       <a href="/" class="me-5 col-2 link-body-emphasis text-decoration-none link-dark pc-header">
         <span class="fs-5">ТІЛsozdik</span>
       </a>
-      <form class="col-3 mx-lg-auto pc-header" id="searchBar" role="search" action="/search/dictionary/" method="get">
+      <form class="col-3 mx-lg-auto pc-header" id="<%= title == 'Іздеу нәтижелері' ? 'disabled' : 'searchBar' %>" role="search" action="/search/dictionary/" method="get">
         <div class="input-group">
-          <input type="search" class="form-control" id="searchBarInput" placeholder="Іздеу..." onkeypress="search()" aria-label="Search" />
-          <button type="button" class="btn btn-outline-dark" onclick="searchButton()"><i class="fa-solid fa-magnifying-glass"></i></button>
+          <input type="search" class="form-control <%= title == 'Іздеу нәтижелері' ? 'disabled' : '' %>" id="<%= title == 'Іздеу нәтижелері' ? 'disabled' : 'searchBarInput' %>" placeholder="Іздеу..." <%= title == 'Іздеу нәтижелері' ? '' : 'onkeypress=search()' %> aria-label="Search" <%= title == 'Іздеу нәтижелері' ? 'disabled' : '' %>/>
+          <button type="button" class="btn btn-outline-dark" <%= title == 'Іздеу нәтижелері' ? '' : 'onclick=searchButton()' %> <%= title == 'Іздеу нәтижелері' ? 'disabled' : '' %>><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
       </form>
       <% if (user.userId) {%>
@@ -50,7 +50,11 @@
                 <p><a class="nav-link fs-6" href="/dictionary/new"><i class="fa-solid fa-plus"></i> <span>Cөз еңгізу</span></a></p>
                 <hr style="width: 60%;">
             <% } %>
-            <p><a class="nav-link fs-6" href="/developer-log"><i class="fa-solid fa-newspaper"></i> <span>Кодер Журналы</span></a></p>
+            <p><a class="nav-link fs-6" href="/dictionary/phrases"><i class="fa-solid fa-quote-left"></i> <span>Сөз тіркестері</span></a></p>
+            <hr style="width: 60%;">
+            <p><a class="nav-link fs-6" href="/blog"><i class="fa-solid fa-newspaper"></i> <span>Блоктар</span></a></p>
+            <hr style="width: 60%;">
+            <p><a class="nav-link fs-6" href="/developer-log"><i class="fa-solid fa-code"></i> <span>Кодер Журналы</span></a></p>
             <hr style="width: 60%;">
             <p><a class="nav-link fs-6" href="/contact"><i class="fa-solid fa-address-book"></i> <span>Контакты</span></a></p>
         </div>
@@ -67,7 +71,9 @@
               <% if (user.userId && user.emailverified && user.userlevel >= 2) { %>
                   <p><a class="nav-link fs-6" href="/dictionary/new"><i class="fa-solid fa-plus"></i> <span>Cөз еңгізу</span></a></p>
               <% } %>
-              <p><a class="nav-link fs-6" href="/developer-log"><i class="fa-solid fa-newspaper"></i> <span>Кодер Журналы</span></a></p>
+              <p><a class="nav-link fs-6" href="/dictionary/phrases"><i class="fa-solid fa-quote-left"></i> <span>Сөз тіркестері</span></a></p>
+              <p><a class="nav-link fs-6" href="/blog"><i class="fa-solid fa-newspaper"></i> <span>Блоктар</span></a></p>
+              <p><a class="nav-link fs-6" href="/developer-log"><i class="fa-solid fa-code"></i> <span>Кодер Журналы</span></a></p>
               <p><a class="nav-link fs-6" href="/contact"><i class="fa-solid fa-address-book"></i> <span>Контакты</span></a></p>
             </div>
           </div>

@@ -1,9 +1,9 @@
 // Search
 function search() {
-    
     event.preventDefault();
     var searchBar = document.getElementById("searchBar");
     var searchBarInput = document.getElementById("searchBarInput");
+    
     if (event.key == "Enter") {
         searchBar.setAttribute("action", searchBar.getAttribute('action') + searchBarInput.value.replace(" ", ""));
         searchBar.submit();

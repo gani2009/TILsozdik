@@ -13,5 +13,8 @@
             <p><%= words[i].meaning %></p>
         </a>
     <% } %>
+    <% if (words.length == 0){ %>
+        <p>No results found</p>
+    <% } %>
 </div>
 <%- include('footer') %>

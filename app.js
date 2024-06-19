@@ -121,7 +121,7 @@ app.post('/login', async (req, res) => {
     } else {
         res.cookie('error', 'noauth');
         res.redirect('/login');
-    }
+    };
 });
 
 // Register
@@ -224,7 +224,13 @@ app.get('/verify/email/:token', async (req, res) => {
 
 // Reset password
 app.get('/reset/password', (req, res) => {
-    app.render("resetpassword");
+    res.render("reset-password");
+});
+app.post('/reset/password/code', (req, res) => {
+    res.render("reset-password-code");
+});
+app.post('/reset/password', (req, res) => {
+    res.redirect("/login");
 });
 
 // Logout
@@ -371,10 +377,14 @@ app.post('/dictionary/new', async (req, res) => {
         };
         let date = new Date().toISOString().split('T')[0];
         await pool.query('INSERT INTO dictionary (word, meaning, author, date) VALUES ($1, $2, $3, $4)', [newWord, req.body.meaning, req.session.username, date]);
-        await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.01 / Math.floor(req.session.userlevel)), req.session.username]);
-        req.session.userlevel = req.session.userlevel + (0.01 /Math.floor(req.session.userlevel));
+        await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + ((0.02 / (2**Math.floor(req.session.userlevel))) * 2), req.session.username]);
+        req.session.userlevel = req.session.userlevel + ((0.02 / (2**Math.floor(req.session.userlevel))) * 2);
         res.redirect(`/dictionary/${newWord}`);
     };
+});
+
+app.get('/dictionary/phrases', (req, res) => {
+    res.send("In development");
 });
 
 app.get('/dictionary/:word', async (req, res) => {
@@ -407,8 +417,8 @@ app.get('/dictionary/:word/verify', async (req, res) => {
         let result = await pool.query('SELECT * FROM dictionary WHERE word = $1', [searchWord]);
         if (result.rows.length > 0){
             await pool.query('UPDATE dictionary SET verified=true WHERE word = $1', [searchWord]);
-            await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.01 / Math.floor(req.session.userlevel)), req.session.username]);
-            req.session.userlevel = req.session.userlevel + (0.01 /Math.floor(req.session.userlevel));
+            await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.02 / (2**Math.floor(req.session.userlevel))), req.session.username]);
+            req.session.userlevel = req.session.userlevel + (0.02 / (2**Math.floor(req.session.userlevel)));
             res.redirect(`/dictionary/${searchWord}`);
         } else {
             res.redirect(`/dictionary/${searchWord}`);
@@ -482,16 +492,17 @@ app.post('/dictionary/:word/edit', async (req, res) => {
                 };
             };
             if (req.session.userlevel >= 5 && req.body.delete == "true" ) {
+                await pool.query("UPDATE users SET userlevel = CAST(userlevel AS numeric) - 0.1 WHERE username=$1", [result.rows[0].author]);
                 await pool.query('DELETE FROM dictionary WHERE word=$1', [req.params.word]);
-                await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.01 / Math.floor(req.session.userlevel)), req.session.username]);
-                req.session.userlevel = req.session.userlevel + (0.01 /Math.floor(req.session.userlevel));
+                await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + ((0.02 / (2**Math.floor(req.session.userlevel))) * 0.5), req.session.username]);
+                req.session.userlevel = req.session.userlevel + ((0.02 / (2**Math.floor(req.session.userlevel))) * 0.5);
                 res.redirect(`/dictionary`);
             } else {
                 let history = {word: result.rows[0].word, meaning: result.rows[0].meaning, author: result.rows[0].author, date: result.rows[0].date};
                 let date = new Date().toISOString().split('T')[0];
-                await pool.query('UPDATE dictionary SET word=$1, meaning=$2, history=array_append(history, $3), verified=false, date=$5 WHERE word=$4', [req.body.word || word, req.body.meaning, history, req.params.word, date]);
-                await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.01 / Math.floor(req.session.userlevel)), req.session.username]);
-                req.session.userlevel = req.session.userlevel + (0.01 /Math.floor(req.session.userlevel));
+                await pool.query('UPDATE dictionary SET word=$1, meaning=$2, history=array_append(history, $3), verified=false, date=$5, author=$6 WHERE word=$4', [req.body.word || word, req.body.meaning, history, req.params.word, date, req.session.username]);
+                await pool.query("UPDATE users SET userlevel=$1 WHERE username=$2", [req.session.userlevel + (0.02 / (2**Math.floor(req.session.userlevel))), req.session.username]);
+                req.session.userlevel = req.session.userlevel + (0.02 / (2**Math.floor(req.session.userlevel)));
                 res.redirect(`/dictionary/${req.body.word || word}`);
             };
         } else {
@@ -499,6 +510,8 @@ app.post('/dictionary/:word/edit', async (req, res) => {
         };
     };
 });
+
+
 
 // Search
 app.get('/search/dictionary', async (req, res) => {

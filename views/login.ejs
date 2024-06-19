@@ -8,6 +8,9 @@
         <% if (error === 'authneeded') { %>
             <p class="alert alert-danger">Оны жасай алу үшін аккаунт керек. </p>
         <% } %>
+        <% if (error === 'passreset') { %>
+            <p class="alert alert-primary">Құпиясөз қалпына келтірілді. </p>
+        <% } %>
         <form action="/login" method="post">
             <label for="loginusername">Қолданушы аты:</label><br>
             <input type="text" class="form-control" id="loginusername" name="loginusername" pattern="[a-zA-Z0-9!@#$%^*_|]" required>

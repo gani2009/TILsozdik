@@ -28,6 +28,14 @@
     width: 350px;
 }
 
+#reset-form {
+    margin: 10px;
+    width: 400px;
+}
+#reset-form input {
+    width: 350px;
+}
+
 #newword-form {
     margin: 10px;
     width: 550px;
