@@ -12,7 +12,7 @@ const tokenGenerator = require('token-generator')({
 });
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3001;
 
 // Development
 const pool = new Pool({
