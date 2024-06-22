@@ -16,9 +16,9 @@ const port = process.env.PORT;
 
 // Development
 const pool = new Pool({
-    user: 'gani',
+    user: process.env.PGUSER,
     host: 'localhost',
-    database: 'mydatabase',
+    database: process.env.PGDATABASE,
     password: process.env.PGPASS,
     port: 5432,
 });
