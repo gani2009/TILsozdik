@@ -12,24 +12,16 @@ const tokenGenerator = require('token-generator')({
 });
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT;
 
 // Development
 const pool = new Pool({
-    user: 'postgres',
+    user: 'gani',
     host: 'localhost',
-    database: 'samgauor_users',
+    database: 'mydatabase',
     password: process.env.PGPASS,
     port: 5432,
 });
-// Producion:
-// const pool = new Pool({
-//     user: 'postgres',
-//     host: 'srv-db-pgsql01.ps.kz',
-//     database: 'samgauor_users',
-//     password: process.env.PGPASS,
-//     port: 5432,
-// });
 
 var transporter = nodemailer.createTransport({
   host: 'srv-plesk50.ps.kz',
