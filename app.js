@@ -290,7 +290,11 @@ app.get('/profile/:userLookedUp', async (req, res) => {
     let userLookedUp = req.params.userLookedUp;
     userLookedUp = userLookedUp.toLowerCase();
     let result = await pool.query('SELECT username, firstname, lastname, userlevel, private FROM users WHERE username=$1 ', [userLookedUp]);
-    res.render('profile', {userLookedUp: result.rows, error: error});
+    let resultTwoPointOh;
+    if (userLookedUp == req.session.username || (result.rows.length != 0 && result.rows[0].private == false)) {
+        resultTwoPointOh = await pool.query('SELECT * FROM dictionary WHERE author=$1 ', [userLookedUp]);
+    };
+    res.render('profile', {userLookedUp: result.rows, error: error, wordss: resultTwoPointOh});
 });
 
 // Dictionary

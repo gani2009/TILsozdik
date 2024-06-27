@@ -31,6 +31,14 @@
                 <h6>Электронды почта: <%= user.email %></h6>
             <% } %>
             <h4>Мақалалары: </h4>
+            <% for (i in wordss){ %>
+                <div class="profile-word">
+                    <a href="/dictionary/<%= wordss[i].word %>">
+                        <h3><%= wordss[i].word %></h3>
+                        <p>wordss[i].meaning</p>
+                    </a>
+                </div>
+            <% }; %>
         <% } else { %>
             <h5>Бұл жеке акаунт. </h5>
         <% } %>

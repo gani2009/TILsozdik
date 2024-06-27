@@ -100,3 +100,14 @@ h5 {
 h6 {
     font-size: 0.75rem !important;
 }
+.profile-word {
+    margin: 15px;
+    border: black 1px solid;
+    border-radius: 10px;
+    width: 100px;
+    width: 100px;
+}
+.profile-word a {
+    color: black;
+    text-decoration: none;
+}
